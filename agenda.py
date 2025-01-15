@@ -39,9 +39,11 @@ def visualizar_contatos(somente_favoritos=False):
     for indice, contato in enumerate(contatos, start=1):
         emoji_favorito = " 💓 " if contato.get('favorito') else ""
         if contato.get("favorito"):
-            contato_favorito = f"{indice}. {contato.get('nome')} {contato.get('telefone')} {contato.get('email')} {emoji_favorito}"
+            contato_favorito = (
+                f"{indice}. {contato.get('nome')} {contato.get('telefone')} {contato.get('email')} {emoji_favorito}")
             lista_contatos_favoritos.append(contato_favorito)
-        contato = f"{indice}. {contato.get('nome')} {contato.get('telefone')} {contato.get('email')} {emoji_favorito}"
+        contato = (
+            f"{indice}. {contato.get('nome')} {contato.get('telefone')} {contato.get('email')} {emoji_favorito}")
         lista_contatos.append(contato)
 
     if somente_favoritos:
@@ -97,16 +99,21 @@ def marcar_desmarcar_favorito(indice_contato):
         :param indice_contato:
         :return:
     """
-    contato = contatos[ajusta_indice_contato(indice_contato)]
-    desc_atualizado = "Desmarcado como favorito" if contato["favorito"] else "Marcado como favorito"
+    try:
+        contato = contatos[ajusta_indice_contato(indice_contato)]
+        desc_atualizado = "Desmarcado como favorito" if contato["favorito"] else "Marcado como favorito"
 
-    if contato.get("favorito"):
-        contato["favorito"] = False
-    else:
-        contato["favorito"] = True
+        if contato.get("favorito"):
+            contato["favorito"] = False
+        else:
+            contato["favorito"] = True
 
-    print(f"\n ↳ O contato foi {desc_atualizado}!")
-    visualizar_contatos()
+        print(f"\n ↳ O contato foi {desc_atualizado}!")
+        visualizar_contatos()
+    except IndexError as e:
+        print("\n ↳ Indice de contato Inexistente!")
+    except ValueError as e:
+        print("\n ↳ Informe o indice de contato Valido!")
     return
 
 
@@ -116,9 +123,12 @@ def deletar_contato(indice_contato):
         :param contato:
         :return:
     """
-    if indice_contato_valido(indice_contato):
-        contatos.remove(contatos[ajusta_indice_contato(indice_contato)])
-        print("\n↳ Contato deletado com sucesso!")
-    else:
-        print(f"↳ Indice {indice_contato} invalido ou inexistente!")
+    try:
+        if indice_contato_valido(indice_contato):
+            contatos.remove(contatos[ajusta_indice_contato(indice_contato)])
+            print("\n↳ Contato deletado com sucesso!")
+        else:
+            print(f"↳ Indice {indice_contato} invalido ou inexistente!")
+    except ValueError as e:
+        print("\n ↳ Informe o indice de contato Valido!")
     return
